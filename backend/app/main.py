@@ -15,6 +15,7 @@ from app.core.config import get_settings
 from app.infrastructure.database.postgres import init_db
 from app.infrastructure.neo4j.driver import init_neo4j, close_neo4j
 from app.infrastructure.cache.redis import init_redis, close_redis
+from app.api.middleware import setup_middleware
 
 settings = get_settings()
 
@@ -117,6 +118,9 @@ A production-grade system for analyzing clinical protocol amendments and identif
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Setup custom middleware (audit logging, error handling, correlation IDs)
+    setup_middleware(app)
 
     # Include routers
     from app.api.routes import auth, amendments, impact, graph, review, audit
